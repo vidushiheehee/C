@@ -1,0 +1,12 @@
+#include<stdio.h>
+main()
+{
+  printf("Enter two numbers: ");
+  int x,y;
+  scanf("%d %d",&x,&y);
+  printf("Original Inputs:\nx = %d\ny = %d\n",x,y);
+  y=x+y;
+  x=y-x;
+  y=y-x;
+  printf("Swapped Inputs:\nx = %d\ny = %d",x,y);
+}
