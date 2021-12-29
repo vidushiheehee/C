@@ -1,0 +1,26 @@
+#include<stdio.h>
+main()
+{
+	printf("Enter number of rows (less than 10): ");
+	int n,i,j,flag=0;
+	scanf("%d",&n);
+	//updation and termination statements are within loop because same code prints full diamond
+	for(i=0;;)
+	{
+		for(j=0;j<n-i;j++)
+			printf("%d",n-i);
+		for(j=i*2;j>0;j--)
+			printf(" ");
+		for(j=0;j<n-i;j++)
+			printf("%d",n-i);
+		printf("\n");
+		if(i==n-1)	//upper half of diamond is printed
+			flag=1;
+		if(i==0&&flag==1)	//terminates loop after last row is printed
+			break;
+		if(flag==0)	//increments loop variable until upper half of diamond is printed
+			i++;
+		else		//reverses loop by decrementing loop variable after half diamond is printed
+			i--;
+	}
+}
