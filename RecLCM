@@ -1,0 +1,25 @@
+#include<stdio.h>
+int a,b;
+main()
+{
+	printf("INPUT\n Input first number: ");
+	scanf("%d",&a);
+	printf(" Input second number: ");
+	scanf("%d",&b);
+	printf("OUPUT\n ");
+	int LCM(int);
+	if(a==0||b==0)
+		printf("The LCM of %d and %d = 0.",a,b);
+	else if(a==b)
+		printf("The LCM of %d and %d = %d.",a,b,a);
+	else
+		printf("The LCM of %d and %d = %d.",a,b,LCM(a>b?a:b));
+	return 0;
+}
+int LCM(int m)
+{
+	if(m%a==0&&m%b==0)
+		return m;
+	else
+		return LCM(++m);
+}
