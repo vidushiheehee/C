@@ -1,0 +1,41 @@
+#include<stdio.h>
+#include<conio.h>
+#include<string.h>
+int main()
+{	
+	//creating new file and storing input in it
+	FILE *fp;
+	fp=fopen("NewFile1.txt","w");
+	char str[100];
+	printf("Enter string to store in file:\n");
+	gets(str);
+	fprintf(fp,"%s",str);
+	fclose(fp);
+	
+	//reversing contents of file and displaying
+	fp=fopen("NewFile1.txt","r");
+	char rev[100];
+	fgets(rev,100,fp);
+	strrev(rev);
+	printf("\nInput to the reverse function:\n%s\n\nOutput:\n%s\n",str,rev);
+	fclose(fp);
+	
+	//copying contents of the file to another
+	FILE *fp1;
+	fp=fopen("NewFile1.txt","r");
+	fp1=fopen("NewFile2.txt","w");
+	char ch='\0';
+	while(ch!=EOF)
+	{
+		ch=getc(fp);
+		fputc(ch,fp1);
+	}
+	fclose(fp);
+	fclose(fp1);
+	
+	//displaying contents of new copy file.
+	fp1=fopen("NewFile2.txt","r");
+	fgets(str,100,fp1);
+	printf("\nContents of copy file:\n%s",str);
+	fclose(fp1);
+}
