@@ -1,0 +1,541 @@
+#include<stdio.h>
+#include<string.h>
+#include<malloc.h>
+#include<stdlib.h>
+#include<conio.h>
+int k;
+#define DELAY(n) for(k=0;k<n;k++);
+#define CLEAR system("cls");
+#define CLOSE system("cls");printf("\n\n\t System closed.\n\n");exit(0);
+
+//structure of each account
+struct staccount
+{
+	char date[11],name[20],dob[11],age[3],address[50],ctzn[15],phone[11],email[30];
+	int accno;
+	double amt;
+	struct staccount *next;
+};
+
+typedef struct staccount account;
+account *newacc,*prev,*ptr,*temp;
+account *first=NULL;
+
+void endop();
+void loading();
+void menu();
+void create();
+void details();
+void update();
+void list();
+void erase();
+void trans();
+
+//reusing code to end each operation
+void endop()
+{
+	int x;
+	getch();
+	printf("\n\n\t Enter 1 to go back to the menu: ");
+	scanf("%d",&x);
+	if(x!=1)
+	{
+		loading();
+		DELAY(100000000);
+		CLOSE;
+	}	
+}
+
+//reusing code to delay output
+void loading()
+{
+	DELAY(100000000);
+	CLEAR;
+	printf("\n\n\t Loading");
+	int i;
+	for(i=0;i<3;i++)
+	{
+		DELAY(150000000);
+		printf(" .");
+	}
+	DELAY(100000000);
+	CLEAR;
+}
+
+//main menu for user selection
+menu()
+{
+	loading();
+	printf("\n\n\t CUSTOMER ACCOUNT BANK MANAGEMENT SYSTEM\n");
+	printf("\n\t Main Menu:");
+	printf("\n\t 1. Create a new account.");
+	printf("\n\t 2. Check the details of an existing account.");
+	printf("\n\t 3. Update information of an existing account.");
+	printf("\n\t 4. View customer list.");
+	printf("\n\t 5. Remove an existing account.");
+	printf("\n\t 6. Transactions.");
+	printf("\n\t 7. Exit.");
+	printf("\n\n\t Enter your choice: ");
+	int x;
+	scanf("%d",&x);
+	switch(x)
+	{
+		case 1:
+			create();
+			break;
+		case 2:
+			details();
+			break;
+		case 3:
+			update();
+			break;
+		case 4:
+			list();
+			break;
+		case 5:
+			erase();
+			break;
+		case 6:
+			trans();
+			break;
+		case 7:
+			loading();
+			CLOSE;
+			break;
+		default:
+			printf("\n\n\t Invalid Input.");
+			endop();
+	}
+	menu();
+}
+
+//creating a new account in linked list format
+void create()
+{
+	loading();
+	
+	//dynamic structure creation
+	newacc=(account*)malloc(sizeof(account));
+	
+	if(newacc==NULL)
+	{
+		printf("\n\n\t Account was not created.");
+		endop();
+		return;
+	}
+	else if(first==NULL)
+		first=newacc;
+	else
+		prev->next=newacc;
+
+	newacc->next=NULL;
+	prev=newacc;
+	
+	//counting number of accounts
+	int c=1;
+	ptr=first;
+	while(ptr->next!=NULL)
+	{
+		c++;
+		temp=ptr;
+		ptr=ptr->next;
+	}
+	
+	//initialising account details
+	if(c==1)
+		newacc->accno=1;
+	else
+		newacc->accno=1+(temp->accno);
+	printf("\n\n\t ACCOUNT NUMBER %d CREATED.",newacc->accno);
+	printf("\n\n\n\t Enter the following details for account number %d:",newacc->accno);
+	printf("\n\n\t Today's date (dd/mm/yyy): ");
+	gets(newacc->date);
+	gets(newacc->date);
+	printf("\t Name: ");
+	gets(&newacc->name);
+	printf("\t Date of birth (dd/mm/yyyy): ");
+	gets(&newacc->dob);
+	printf("\t Age: ");
+	gets(&newacc->age);
+	printf("\t Address: ");
+	gets(&newacc->address);
+	printf("\t Current citizenship: ");
+	gets(&newacc->ctzn);
+	printf("\t Phone number: ");
+	gets(&newacc->phone);
+	printf("\t Email id: ");
+	gets(&newacc->email);
+	printf("\t Amount to deposit: Rs. ");
+	double amount;
+	scanf("%lf",&amount);
+	newacc->amt=amount;
+	
+	printf("\n\n\t Creating Account");
+	int i;
+	for(i=0;i<3;i++)
+	{
+		DELAY(150000000);
+		printf(" .");
+	}
+	DELAY(150000000);
+	printf("\n\t Account created.");
+	endop();
+}
+
+//printing the details of an account
+void details()
+{
+	loading();
+	
+	//checking for empty system
+	if(first==NULL)
+	{
+		printf("\n\n\t No accounts are present in the system.");
+		endop();
+		return;
+	}
+	
+	//finding account to display details from
+	int x,flag=0;
+	printf("\n\n\t Enter account number to display the details of: ");
+	scanf("%d",&x);
+	ptr=first;
+	while(ptr!=NULL)
+	{
+		if(x==ptr->accno)
+		{
+			flag=1;
+			break;
+		}
+		ptr=ptr->next;
+	}
+	if(flag==0)
+	{
+		printf("\n\t Account not found.");
+		endop();
+		return;
+	}
+	
+	//displaying details
+	DELAY(150000000);
+	CLEAR;
+	printf("\n\n\t ACCOUNT NUMBER %d",ptr->accno);
+	printf("\n\t Name: \t\t\t");
+	puts(ptr->name);
+	printf("\t Date of creation: \t");
+	puts(ptr->date);
+	printf("\t Date of birth: \t");
+	puts(ptr->dob);
+	printf("\t Age: \t\t\t");
+	puts(ptr->age);
+	printf("\t Address: \t\t");
+	puts(ptr->address);
+	printf("\t Citizenship: \t\t");
+	puts(ptr->ctzn);
+	printf("\t Phone number: \t\t");
+	puts(ptr->phone);
+	printf("\t Email id:\t\t");
+	puts(ptr->email);
+	printf("\t Balance at present:\tRs. %.2f",ptr->amt);
+	endop();
+}
+
+//updating information of existing account
+void update()
+{
+	loading();
+	
+	//checking for empty system
+	if(first==NULL)
+	{
+		printf("\n\n\t No accounts are present in the system.");
+		endop();
+		return;
+	}
+	
+	//finding the account
+	int x,flag=0;
+	printf("\n\n\t Enter account number to update the details of: ");
+	scanf("%d",&x);
+	ptr=first;
+	while(ptr!=NULL)
+	{
+		if(x==ptr->accno)
+		{
+			flag=1;
+			break;
+		}
+		ptr=ptr->next;
+	}
+	if(flag==0)
+	{
+		printf("\n\t Account not found.");
+		endop();
+		return;
+	}
+	
+	//menu to update
+	int i=1;
+	while(i==1)
+	{
+		DELAY(150000000);
+		CLEAR;
+		printf("\n\n\t ACCOUNT NUMBER %d\n\t NAME: %s",ptr->accno,ptr->name);
+		printf("\n\n\t 1. Update name.");
+		printf("\n\t 2. Update date of birth.");
+		printf("\n\t 3. Update age.");
+		printf("\n\t 4. Update address.");
+		printf("\n\t 5. Update current citizenship.");
+		printf("\n\t 6. Update phone number.");
+		printf("\n\t 7. Update email id.");
+		printf("\n\n\t Enter your choice: ");
+		scanf("%d",&x);
+		switch(x)
+		{
+			case 1:
+				printf("\t Enter new name: ");
+				gets(&ptr->name);
+				gets(&ptr->name);
+				break;
+			case 2:
+				printf("\t Enter new date of birth: ");
+				gets(&ptr->dob);
+				gets(&ptr->dob);
+				break;
+			case 3:
+				printf("\t Enter new age: ");
+				gets(&ptr->age);
+				gets(&ptr->age);
+				break;
+			case 4:
+				printf("\t Enter new address: ");
+				gets(&ptr->address);
+				gets(&ptr->address);
+				break;
+			case 5:
+				printf("\t Enter new citizenship: ");
+				gets(&ptr->ctzn);
+				gets(&ptr->ctzn);
+				break;
+			case 6:
+				printf("\t Enter new phone number: ");
+				gets(&ptr->phone);
+				gets(&ptr->phone);
+				break;
+			case 7:
+				printf("\t Enter new email id: ");
+				gets(&ptr->email);
+				gets(&ptr->email);
+				break;
+			default:
+				printf("\t Invalid input.");
+		}
+		
+		if(x>0&&x<8)
+		{
+			printf("\n\n\t Updating account");
+			int i;
+			for(i=0;i<3;i++)
+			{
+				DELAY(150000000);
+				printf(" .");
+			}
+			DELAY(150000000);
+			printf("\n\t Account updated.");
+		}
+		getch();
+		printf("\n\n\t Enter 1 to update other information, else return to menu: ");
+		scanf("%d",&i);
+	}
+}
+
+//displaying list of all accounts
+void list()
+{
+	loading();
+	
+	//checking for empty system
+	if(first==NULL)
+	{
+		printf("\n\n\t No accounts are present in the system.");
+		endop();
+		return;
+	}
+	
+	//printing list
+	printf("\n\n\t Acc No\t\tName\t\t\tAge\t\tPhone Number\n");	
+	ptr=first;
+	while(ptr!=NULL)
+	{
+		printf("\n\t %d\t\t%s\t\t%s\t\t%s",ptr->accno,ptr->name,ptr->age,ptr->phone);
+		ptr=ptr->next;
+	}
+	endop();
+}
+
+//to delete an account
+void erase()
+{
+	loading();
+	
+	//checking for empty system
+	if(first==NULL)
+	{
+		printf("\n\n\t No accounts are present in the system.");
+		endop();
+		return;
+	}
+	
+	//finding the account
+	int x,flag=0;
+	printf("\n\n\t Enter account number of account to be deleted: ");
+	scanf("%d",&x);
+	ptr=first;
+	temp=NULL;
+	while(ptr!=NULL)
+	{
+		if(x==ptr->accno)
+		{
+			flag=1;
+			break;
+		}
+		temp=ptr;
+		ptr=ptr->next;
+	}
+	if(flag==0)
+	{
+		printf("\n\t Account not found.");
+		endop();
+		return;
+	}
+	
+	DELAY(150000000);
+	CLEAR;
+	printf("\n\n\t ACCOUNT NUMBER %d\n\t NAME: %s",ptr->accno,ptr->name);
+	
+	if(ptr==first)
+		first=first->next;
+	else
+		temp->next=ptr->next;
+	free(ptr);
+	
+	DELAY(150000000);
+	printf("\n\n\t Deleting account");
+	int i;
+	for(i=0;i<3;i++)
+	{
+		DELAY(150000000);
+		printf(" .");
+	}
+	DELAY(150000000);
+	printf("\n\t Account deleted.");
+	endop();
+}
+
+//to make transactions
+void trans()
+{
+	loading();
+	
+	//checking for empty system
+	if(first==NULL)
+	{
+		printf("\n\n\t No accounts are present in the system.");
+		endop();
+		return;
+	}
+	
+	//finding the account
+	int x,flag=0;
+	printf("\n\n\t Enter account number to make the transaction from: ");
+	scanf("%d",&x);
+	ptr=first;
+	while(ptr!=NULL)
+	{
+		if(x==ptr->accno)
+		{
+			flag=1;
+			break;
+		}
+		ptr=ptr->next;
+	}
+	if(flag==0)
+	{
+		printf("\n\t Account not found.");
+		endop();
+		return;
+	}
+	
+	DELAY(150000000);
+	CLEAR;
+	printf("\n\n\t ACCOUNT NUMBER %d\n\t NAME: %s",ptr->accno,ptr->name);
+	printf("\n\n\t 1. Deposit \n\t 2. Withdraw \n\n\t Enter choice: ");
+	scanf("%d",&x);
+	double amount;
+	double bal=ptr->amt;
+	
+	switch(x)
+	{
+		case 1:
+			printf("\t Enter amount to be deposited: Rs. ");
+			scanf("%lf",&amount);
+			ptr->amt=amount+ptr->amt;
+			break;
+		case 2:
+			printf("\t Enter amount to be withdrawn: Rs. ");
+			scanf("%lf",&amount);
+			if(amount>ptr->amt)
+				printf("\n\t Withdrawal unsuccessful, amount exceeded current balance.");
+			else
+				ptr->amt=ptr->amt-amount;
+			break;
+		default:
+			printf("\n\n\t Invalid input.");
+	}
+	
+	if(bal!=ptr->amt)
+	{
+		printf("\n\t Updating balance");
+		int i;
+		for(i=0;i<3;i++)
+		{
+			DELAY(150000000);
+			printf(" .");
+		}
+		DELAY(150000000);
+		printf("\n\t Balance updated.");
+	}
+	DELAY(100000000);
+	printf("\n\n\t Current balance: %.2f",ptr->amt);
+	endop();
+}
+
+//main function with login page
+int main()
+{
+	CLEAR;
+	char pwd[10]="Employee1";
+	char pwdin[10];
+	printf("\n\n\t LOGIN\n\t Enter password to login: ");
+	scanf("%s",&pwdin);
+	if(strcmp(pwd,pwdin))	//password mismatch condition
+	{
+		printf("\n\t Incorrect Password. \n\n\t Press any key to try again or 0 to exit: ");
+		int x;
+		scanf("%d",&x);
+		if(x)
+			main();
+		else
+		{
+			loading();
+			CLOSE;
+		}	
+	}
+	else
+	{
+		printf("\t Password matched.");
+		DELAY(50000000);
+		menu();
+	}
+	return 0;
+}
